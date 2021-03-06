@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <exception>
 vector<ConfigTrace>Parameter::getVConfigTrace() {
 	return Parameter::vConfigTrace;
 };
@@ -14,27 +15,34 @@ void Parameter::setParameter(string fileNameConfig, string fileNameMeasurements)
 {
 	double x, y;
 
-	ifstream fin(fileNameConfig);
-	if (fin.is_open())
-	{
-		while (!fin.eof())
+	try {
+		ifstream fin(fileNameConfig);
+		if (fin.is_open())
 		{
-			while (fin >> x >> y) {
-				vConfigTrace.push_back(ConfigTrace(x, y));
-			}
+			while (!fin.eof())
+			{
+				while (fin >> x >> y) {
+					vConfigTrace.push_back(ConfigTrace(x, y));
+				}
 
+			}
+			fin.close();
 		}
-		fin.close();
-	}
-	else
+		else
+		{
+			cout << "File " << fileNameConfig << " not found" << endl;
+		}
+	}catch(exception &e)
 	{
-		cout << "File " << fileNameConfig << " not found" << endl;
+		cout << "File " << fileNameConfig << " not opened" << endl;
 	}
 
 	double v, phi;
 	unsigned long t;
 
 	ifstream fin1(fileNameMeasurements);
+	try
+	{
 	if (fin1.is_open())
 	{
 		while (!fin1.eof())
@@ -49,5 +57,9 @@ void Parameter::setParameter(string fileNameConfig, string fileNameMeasurements)
 	else
 	{
 		cout << "File " << fileNameMeasurements << " not found" << endl;
+	}
+	}catch (exception& e)
+	{
+	cout << "File " << fileNameMeasurements << " not opened" << endl;
 	}
 };

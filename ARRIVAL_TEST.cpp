@@ -13,15 +13,21 @@ int main(int arg, char* argv[])
 	param.setParameter("configTrace.txt", "measurements.txt");
 	
 	Projection p(&param);
-	projection = p.getProjection();
+	try {
+		projection = p.getProjection();
 
-	if (!projection.empty())
-	{
-		cout << "==================Projection: =================" << endl;
-		for (unsigned int i = 0; i < projection.size(); i++)
+		if (!projection.empty())
 		{
-			cout << projection[i].xy.x << " | " << projection[i].xy.y << endl;
+			cout << "==================Projection: =================" << endl;
+			for (unsigned int i = 0; i < projection.size(); i++)
+			{
+				cout << projection[i].xy.x << " | " << projection[i].xy.y << endl;
+			}
 		}
+	}
+	catch (exception& e)
+	{
+		cout << "Exception of work for the Projection" << endl;
 	}
 	
 	system("pause");

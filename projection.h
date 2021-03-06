@@ -1,7 +1,8 @@
 #include "parameter.h"
 
-#define M_PI 3.14159265358979323846
-#define LEN_INTERVAL 1
+#define M_PI			3.14159265358979323846
+#define LEN_INTERVAL	1
+#define EPSILON			0.000001
 
 //Коэффициенты фильтрации проекций
 #define FILTER_COOF_LEN		0.3		// коэффициент отклонения длины проекции точки на сегмент

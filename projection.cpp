@@ -9,8 +9,22 @@
 Projection::Projection(Parameter* param)
 {
     configTraces = param->getVConfigTrace();
+    if (configTraces.empty())
+    {
+        cout << "Error:: Configuration of the trace is void" << endl;
+    }
+
     m = param->getVMeasurements();
+    if (m.empty())
+    {
+        cout << "Error:: Mesurements are void or wrong" << endl;
+    }
 };
+
+/*Сравнение вещественных чисел */
+bool isEqual(double x, double y, double eps) {
+    return abs(x - y) == eps;
+}
 
 /** Вычисление проекции точки c на прямую ab */
 CoordinatsDecartDot projectionForDot(CoordinatsDecartDot *a, CoordinatsDecartDot* b, CoordinatsDecartDot* c)
@@ -31,10 +45,6 @@ double r(CoordinatsDecartDot *a, CoordinatsDecartDot* b)
     return sqrt(pow((a->x - b->x), 2) + pow((a->y - b->y), 2));
 }
 
-bool isEqual(double x, double y, double eps) {
-    return abs(x - y) <= eps;
-}
-
 /*Определить, лежит ли точка C на отрезке AB*/
 bool thc(CoordinatsDecartDot* A, CoordinatsDecartDot* B, CoordinatsDecartDot* C)
 {
@@ -49,15 +59,15 @@ bool thc(CoordinatsDecartDot* A, CoordinatsDecartDot* B, CoordinatsDecartDot* C)
             return false;
         if (sqrt(a.x * a.x + a.y * a.y) < sqrt(b.x * b.x + b.y * b.y))
             return false;
-        if ((A->x == C->x)&&(A->y == C->y))
+        if ((isEqual(A->x, C->x, EPSILON))&&(isEqual(A->y, C->y, EPSILON)))
             return true;
-        if ((B->x == C->x) && (B->y == C->y))
+        if ((isEqual(B->x, C->x, EPSILON)) && (isEqual(B->y, C->y, EPSILON)))
             return true;
         return true;
 
 }
 
-/*Определение угла наклона отрезка относительно оси OX*/
+/*Определение угла наклона отрезка относительно оси OX в градусах*/
 double Projection::angle(CoordinatsDecartDot* beg, CoordinatsDecartDot* end)
 {
     double at2 = atan2(end->x - beg->x, end->y - beg->y) * 180 / M_PI;
@@ -185,38 +195,42 @@ vector<ProjectionDot> Projection::getProjection()
 
     vector<ProjectionDot> vBest;
     unsigned int currentSegInd = 0;
-
-    sec.beg = { configTraces[0].x , configTraces[0].y };
-    sec.end = { configTraces[1].x, configTraces[1].y };
-
-    unsigned int cInd = 0;
-    for (unsigned int i = 0; i < m.size(); i++)
+    
+    if (!configTraces.empty())
     {
-        if (cInd < configTraces.size() - 1)
-        {
-            vector<ProjectionDot> vPr;
-            unsigned int indPr = 0;
-            vector<ProjectionDot> pD = allProjectionForMeasurement(&configTraces, cInd, &m[i]);
-            if (!pD.empty())
+
+        sec.beg = { configTraces[0].x , configTraces[0].y };
+        sec.end = { configTraces[1].x, configTraces[1].y };
+
+        unsigned int cInd = 0;
+        if (!m.empty()) {
+            for (unsigned int i = 0; i < m.size(); i++)
             {
-                for (unsigned a = 0; a < pD.size(); a++)
+                if (cInd < configTraces.size() - 1)
                 {
-                    vPr.push_back(pD[a]);
-                    //cout << endl;
-                    //cout << "Mesurment " << 0 << " Segment " << pD[a].numSegment << endl;
-                    //cout << pD[a].xy.x << " I " << pD[a].xy.y << " I " << pD[a].l << " I " << pD[a].alpha << " I " << pD[a].numSegment << endl;
-                }
-                vector<ProjectionDot> bPr = filterProjection(&vPr);
+                    vector<ProjectionDot> vPr;
+                    unsigned int indPr = 0;
+                    vector<ProjectionDot> pD = allProjectionForMeasurement(&configTraces, cInd, &m[i]);
+                    if (!pD.empty())
+                    {
+                        for (unsigned a = 0; a < pD.size(); a++)
+                        {
+                            vPr.push_back(pD[a]);
+                        }
+                        vector<ProjectionDot> bPr = filterProjection(&vPr);
 
-                if (!bPr.empty())
-                {
+                        if (!bPr.empty())
+                        {
 
-                    for (unsigned int k = 0; k < bPr.size(); k++) {
-                        vBest.push_back(bPr[k]);
+                            for (unsigned int k = 0; k < bPr.size(); k++) {
+                                vBest.push_back(bPr[k]);
+                            }
+                            cInd = bPr[bPr.size() - 1].numSegment;
+
+                        }
                     }
-                    cInd = bPr[bPr.size() - 1].numSegment;
-
                 }
+
             }
         }
     }
