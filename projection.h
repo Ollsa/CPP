@@ -5,9 +5,9 @@
 #define EPSILON			0.000000001
 
 //Коэффициенты фильтрации проекций
-#define FILTER_COOF_LEN		20		// коэффициент отклонения длины проекции точки на сегмент
-#define FILTER_COOF_SEG_NUM	1		// коэффициент допустимого номера сегмента
-#define FILTER_COOF_ANGLE	30		// коэффициент отклонения вектора от сегмента трассы в градусах
+#define FILTER_COOF_LEN		20.0		// коэффициент отклонения длины проекции точки на сегмент
+#define FILTER_COOF_SEG_NUM	1			// коэффициент допустимого номера сегмента
+#define FILTER_COOF_ANGLE	30.0		// коэффициент отклонения вектора от сегмента трассы в градусах
 
 struct CoordinatsDecartDot
 {
@@ -29,6 +29,13 @@ struct ProjectionDot
 	unsigned int numSegment;
 };
 
+struct Straight //прямая в виде общего уравнения Ax + By + C = 0
+{
+	double A;
+	double B;
+	double C;
+};
+
 class Projection
 {
 private:
@@ -37,6 +44,7 @@ private:
 
 public:
 	Projection(Parameter *param);
+	Projection();
 	vector<ProjectionDot> allProjectionForMeasurement(vector<ConfigTrace>* trace, unsigned int currentIndex, Measurements* m);
 	vector<ProjectionDot> filterProjection(vector<ProjectionDot>* prForM);
 	vector<ProjectionDot>getProjection();
