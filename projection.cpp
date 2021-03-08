@@ -67,7 +67,7 @@ bool thc(CoordinatsDecartDot* A, CoordinatsDecartDot* B, CoordinatsDecartDot* C)
 }
 
 /*Определение угла наклона отрезка относительно оси OX в градусах*/
-double Projection::angle(CoordinatsDecartDot* beg, CoordinatsDecartDot* end)
+double angle(CoordinatsDecartDot* beg, CoordinatsDecartDot* end)
 {
     double at2 = atan2(end->x - beg->x, end->y - beg->y) * 180 / M_PI;
     return (at2 < 0) ? 360 + at2 : at2;

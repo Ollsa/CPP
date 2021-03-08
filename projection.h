@@ -39,6 +39,5 @@ public:
 	Projection(Parameter *param);
 	vector<ProjectionDot> allProjectionForMeasurement(vector<ConfigTrace>* trace, unsigned int currentIndex, Measurements* m);
 	vector<ProjectionDot> filterProjection(vector<ProjectionDot>* prForM);
-	double angle(CoordinatsDecartDot* beg, CoordinatsDecartDot* end);
 	vector<ProjectionDot>getProjection();
 };
