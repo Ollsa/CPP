@@ -7,11 +7,11 @@
 
 int main(int arg, char* argv[])
 {
-    std::cout << "Hello, ARRIVAL!\n";
+	std::cout << "Hello, ARRIVAL!\n";
 	vector<ProjectionDot> projection;
 	Parameter param;
 	param.setParameter("configTrace.txt", "measurements.txt");
-	
+
 	Projection p(&param);
 	try {
 		projection = p.getProjection();
@@ -29,6 +29,6 @@ int main(int arg, char* argv[])
 	{
 		cout << "Exception of work for the Projection" << endl;
 	}
-	
+
 	system("pause");
-}
+};

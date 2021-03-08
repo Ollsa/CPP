@@ -63,8 +63,7 @@ bool thc(CoordinatsDecartDot* A, CoordinatsDecartDot* B, CoordinatsDecartDot* C)
             return true;
         if ((isEqual(B->x, C->x, EPSILON)) && (isEqual(B->y, C->y, EPSILON)))
             return true;
-        return true;
-
+        return true;      
 }
 
 /*Определение угла наклона отрезка относительно оси OX в градусах*/
@@ -94,12 +93,12 @@ bool numSegComp(const ProjectionDot& a, const ProjectionDot& b)
 
 /*Отфильтровать приближения для точки
 * Можно задавать кооэффичиенты фильтрации по
+    - наиболее подходящее по номеру сегмента.
+        Можно отбрасывать проекции удалённые от текущего сегмента трассы больше чем FILTER_COOF_ANGLE
     - наиболее подходящего направления.
         Задаётся угол допустимого отклонения от направления вектора скорости в FILTER_COOF_ANGLE
     - наиболее близкое по длине проекции к отрезку трассы.
         Можно отбрасывать проекции, удалённые от отрезка дальше, чем FILTER_COOF_LEN
-    - наиболее подходящее по номеру сегмента.
-        Можно отбрасывать проекции удалённые от текущего сегмента трассы больше чем FILTER_COOF_ANGLE
 */
 vector<ProjectionDot> Projection::filterProjection(vector<ProjectionDot>* prForDot)
 {
@@ -111,25 +110,26 @@ vector<ProjectionDot> Projection::filterProjection(vector<ProjectionDot>* prForD
             return *prForDot;
         }
 
-        //1 Определить наиболее подходящее направление
-        //Отфильтровать проекции по направлению
-         std::sort(prForDot->begin(), prForDot->end(), dirComp);
-         double val = (*prForDot)[0].alpha;
-         vector<ProjectionDot>::iterator it = std::find_if(prForDot->begin(), prForDot->end(), [&](const ProjectionDot& s)->bool { return (s.alpha > val + FILTER_COOF_ANGLE); });
-         prForDot->erase(it,prForDot->end());
-         
-         //2 Для всех подходящих направлений выбрать проекцию с подходящей длиной
+        // Взять ближайший сегмент
+        std::sort(prForDot->begin(), prForDot->end(), numSegComp);
+        unsigned int v = (*prForDot)[0].numSegment;
+        vector<ProjectionDot>::iterator it = std::find_if(prForDot->begin(), prForDot->end(), [&](const ProjectionDot& s)->bool { return (s.numSegment > v + FILTER_COOF_SEG_NUM); });
+        prForDot->erase(it, prForDot->end());
+
+        //2 Для всех подходящих направлений выбрать проекцию с подходящей длиной
          std::sort(prForDot->begin(), prForDot->end(), lenComp);
-         val = (*prForDot)[0].l;
+         double val = (*prForDot)[0].l;
          it = std::find_if(prForDot->begin(), prForDot->end(), [&](const ProjectionDot& s)->bool { return (s.l > val + FILTER_COOF_LEN); });
          prForDot->erase(it, prForDot->end());
-
-         // Взять ближайший сегмент
-         std::sort(prForDot->begin(), prForDot->end(), numSegComp);
-         unsigned int v = (*prForDot)[0].numSegment;
-         it = std::find_if(prForDot->begin(), prForDot->end(), [&](const ProjectionDot& s)->bool { return (s.numSegment > v + FILTER_COOF_SEG_NUM); });
+         
+        //Отфильтровать проекции по направлению
+         std::sort(prForDot->begin(), prForDot->end(), dirComp);
+         val = (*prForDot)[0].alpha;
+         it = std::find_if(prForDot->begin(), prForDot->end(), [&](const ProjectionDot& s)->bool { return (s.alpha > val + FILTER_COOF_ANGLE); });
          prForDot->erase(it, prForDot->end());
-    }
+
+
+}
     
     return *prForDot;
 };
@@ -138,7 +138,7 @@ vector<ProjectionDot> Projection::filterProjection(vector<ProjectionDot>* prForD
 /** Определение всех проекций измерений к каждому сегменту трассы
 * Для измерения создаётся вектор перемещения за время дельта Т
 * Дельта Т делится на несколько отрезков длиной, задаваемой параметром LEN_INTERVAL
-* Считаю, что вектор перемещения сонаправлен с вектором скорости
+* Считаю, что вектор перемещения сонаправлен с вектором скорости, если считать, что движение прямолинейное
 * Для каждой точки вычисляется проекция на каждый сегмент трассы
 */
 vector<ProjectionDot> Projection::allProjectionForMeasurement(vector<ConfigTrace>*trace, unsigned int currentIndex, Measurements* m)
@@ -195,7 +195,7 @@ vector<ProjectionDot> Projection::getProjection()
 
     vector<ProjectionDot> vBest;
     unsigned int currentSegInd = 0;
-    
+
     if (!configTraces.empty())
     {
 
@@ -227,6 +227,7 @@ vector<ProjectionDot> Projection::getProjection()
                             }
                             cInd = bPr[bPr.size() - 1].numSegment;
 
+
                         }
                     }
                 }
@@ -235,4 +236,4 @@ vector<ProjectionDot> Projection::getProjection()
         }
     }
     return vBest;
-}
+};

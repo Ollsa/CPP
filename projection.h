@@ -2,12 +2,12 @@
 
 #define M_PI			3.14159265358979323846
 #define LEN_INTERVAL	1
-#define EPSILON			0.000001
+#define EPSILON			0.000000001
 
 //Коэффициенты фильтрации проекций
-#define FILTER_COOF_LEN		0.3		// коэффициент отклонения длины проекции точки на сегмент
+#define FILTER_COOF_LEN		20		// коэффициент отклонения длины проекции точки на сегмент
 #define FILTER_COOF_SEG_NUM	1		// коэффициент допустимого номера сегмента
-#define FILTER_COOF_ANGLE	5		// коэффициент отклонения вектора от сегмента трассы в градусах
+#define FILTER_COOF_ANGLE	30		// коэффициент отклонения вектора от сегмента трассы в градусах
 
 struct CoordinatsDecartDot
 {
