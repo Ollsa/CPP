@@ -18,20 +18,16 @@ void Parameter::setParameter(string fileNameConfig, string fileNameMeasurements)
 	try {
 		ifstream fin(fileNameConfig);
 		if (fin.is_open())
-		{
-			while (!fin.eof())
 			{
 				while (fin >> x >> y) {
 					vConfigTrace.push_back(ConfigTrace(x, y));
 				}
-
+				fin.close();
 			}
-			fin.close();
-		}
-		else
-		{
-			cout << "File " << fileNameConfig << " not found" << endl;
-		}
+			else
+			{
+				cout << "File " << fileNameConfig << " not found" << endl;
+			}
 	}catch(exception &e)
 	{
 		cout << "File " << fileNameConfig << " not opened" << endl;
@@ -45,12 +41,8 @@ void Parameter::setParameter(string fileNameConfig, string fileNameMeasurements)
 	{
 	if (fin1.is_open())
 	{
-		while (!fin1.eof())
-		{
-			while (fin1 >> x >> y >> v >> phi >> t) {
-				vMeasurements.push_back(Measurements(x, y, v, phi, t));
-			}
-
+		while (fin1 >> x >> y >> v >> phi >> t) {
+			vMeasurements.push_back(Measurements(x, y, v, phi, t));
 		}
 		fin1.close();
 	}
