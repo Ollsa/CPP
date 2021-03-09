@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #include <vector>
 #include <algorithm>
 #include "projection.h"
@@ -25,15 +25,15 @@ Projection::Projection()
 {
 };
 
-// Сравнение вещественных чисел 
+// РЎСЂР°РІРЅРµРЅРёРµ РІРµС‰РµСЃС‚РІРµРЅРЅС‹С… С‡РёСЃРµР» 
 bool isEqual(double x, double y, double eps) {
     return abs(x - y) == eps;
 }
 
-// Вычисление координаты точки для построения перпендикуляра к прямой AB
+// Р’С‹С‡РёСЃР»РµРЅРёРµ РєРѕРѕСЂРґРёРЅР°С‚С‹ С‚РѕС‡РєРё РґР»СЏ РїРѕСЃС‚СЂРѕРµРЅРёСЏ РїРµСЂРїРµРЅРґРёРєСѓР»СЏСЂР° Рє РїСЂСЏРјРѕР№ AB
 CoordinatsDecartDot perpendicularDot(CoordinatsDecartDot *a, CoordinatsDecartDot* b, CoordinatsDecartDot* c)
 {
-    //x и y - координаты вектора, перпендикулярного к AB
+    //x Рё y - РєРѕРѕСЂРґРёРЅР°С‚С‹ РІРµРєС‚РѕСЂР°, РїРµСЂРїРµРЅРґРёРєСѓР»СЏСЂРЅРѕРіРѕ Рє AB
     double x = b->y - a->y; 
     double y = a->x - b->x;
     double L = (a->x * b->y - b->x * a->y + a->y * c->x - b->y * c->x + b->x * c->y - a->x * c->y) / (x * (b->y - a->y) + y * (a->x - b->x));
@@ -43,13 +43,13 @@ CoordinatsDecartDot perpendicularDot(CoordinatsDecartDot *a, CoordinatsDecartDot
     return h;
 }
 
-//Расстояние между двумя точками
+//Р Р°СЃСЃС‚РѕСЏРЅРёРµ РјРµР¶РґСѓ РґРІСѓРјСЏ С‚РѕС‡РєР°РјРё
 double r(CoordinatsDecartDot *a, CoordinatsDecartDot* b)
 {
     return sqrt(pow((a->x - b->x), 2) + pow((a->y - b->y), 2));
 }
 
-//Определить, лежит ли точка C на отрезке AB
+//РћРїСЂРµРґРµР»РёС‚СЊ, Р»РµР¶РёС‚ Р»Рё С‚РѕС‡РєР° C РЅР° РѕС‚СЂРµР·РєРµ AB
 bool thc(CoordinatsDecartDot* A, CoordinatsDecartDot* B, CoordinatsDecartDot* C)
 {
     CoordinatsDecartDot a = { B->x - A->x, B->y - A->y };
@@ -70,39 +70,39 @@ bool thc(CoordinatsDecartDot* A, CoordinatsDecartDot* B, CoordinatsDecartDot* C)
         return true;      
 }
 
-//Определение угла наклона отрезка относительно оси OX в градусах
+//РћРїСЂРµРґРµР»РµРЅРёРµ СѓРіР»Р° РЅР°РєР»РѕРЅР° РѕС‚СЂРµР·РєР° РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РѕСЃРё OX РІ РіСЂР°РґСѓСЃР°С…
 double angle(CoordinatsDecartDot* beg, CoordinatsDecartDot* end)
 {
     double at2 = (atan2(end->y - beg->y, end->x - beg->x)) * 180 / M_PI;
     return (at2 < 0) ? 360 + at2 : at2;
 }
 
-//Метод -компаратор для оределения наиболее подходящего направления
+//РњРµС‚РѕРґ -РєРѕРјРїР°СЂР°С‚РѕСЂ РґР»СЏ РѕСЂРµРґРµР»РµРЅРёСЏ РЅР°РёР±РѕР»РµРµ РїРѕРґС…РѕРґСЏС‰РµРіРѕ РЅР°РїСЂР°РІР»РµРЅРёСЏ
 bool dirComp(const ProjectionDot& a, const ProjectionDot& b)
 {
     return (a.alpha) < (b.alpha);
 }
 
-//Метод -компаратор для оределения минимальной длины проекции
+//РњРµС‚РѕРґ -РєРѕРјРїР°СЂР°С‚РѕСЂ РґР»СЏ РѕСЂРµРґРµР»РµРЅРёСЏ РјРёРЅРёРјР°Р»СЊРЅРѕР№ РґР»РёРЅС‹ РїСЂРѕРµРєС†РёРё
 bool lenComp(const ProjectionDot& a, const ProjectionDot& b)
 {
     return (a.l) < (b.l);
 }
 
-//Метод -компаратор для оределения минимального номера сегмента
+//РњРµС‚РѕРґ -РєРѕРјРїР°СЂР°С‚РѕСЂ РґР»СЏ РѕСЂРµРґРµР»РµРЅРёСЏ РјРёРЅРёРјР°Р»СЊРЅРѕРіРѕ РЅРѕРјРµСЂР° СЃРµРіРјРµРЅС‚Р°
 bool numSegComp(const ProjectionDot& a, const ProjectionDot& b)
 {
     return (a.numSegment) < (b.numSegment);
 }
 
-// Отфильтровать приближения для точки
-// Можно задавать кооэффичиенты фильтрации по
-//    - наиболее подходящее по номеру сегмента.
-//        Можно отбрасывать проекции удалённые от текущего сегмента трассы больше чем FILTER_COOF_ANGLE
-//    - наиболее подходящего направления.
-//        Задаётся угол допустимого отклонения от направления вектора скорости в FILTER_COOF_ANGLE
-//    - наиболее близкое по длине проекции к отрезку трассы.
-//        Можно отбрасывать проекции, удалённые от отрезка дальше, чем FILTER_COOF_LEN
+// РћС‚С„РёР»СЊС‚СЂРѕРІР°С‚СЊ РїСЂРёР±Р»РёР¶РµРЅРёСЏ РґР»СЏ С‚РѕС‡РєРё
+// РњРѕР¶РЅРѕ Р·Р°РґР°РІР°С‚СЊ РєРѕРѕСЌС„С„РёС‡РёРµРЅС‚С‹ С„РёР»СЊС‚СЂР°С†РёРё РїРѕ
+//    - РЅР°РёР±РѕР»РµРµ РїРѕРґС…РѕРґСЏС‰РµРµ РїРѕ РЅРѕРјРµСЂСѓ СЃРµРіРјРµРЅС‚Р°.
+//        РњРѕР¶РЅРѕ РѕС‚Р±СЂР°СЃС‹РІР°С‚СЊ РїСЂРѕРµРєС†РёРё СѓРґР°Р»С‘РЅРЅС‹Рµ РѕС‚ С‚РµРєСѓС‰РµРіРѕ СЃРµРіРјРµРЅС‚Р° С‚СЂР°СЃСЃС‹ Р±РѕР»СЊС€Рµ С‡РµРј FILTER_COOF_ANGLE
+//    - РЅР°РёР±РѕР»РµРµ РїРѕРґС…РѕРґСЏС‰РµРіРѕ РЅР°РїСЂР°РІР»РµРЅРёСЏ.
+//        Р—Р°РґР°С‘С‚СЃСЏ СѓРіРѕР» РґРѕРїСѓСЃС‚РёРјРѕРіРѕ РѕС‚РєР»РѕРЅРµРЅРёСЏ РѕС‚ РЅР°РїСЂР°РІР»РµРЅРёСЏ РІРµРєС‚РѕСЂР° СЃРєРѕСЂРѕСЃС‚Рё РІ FILTER_COOF_ANGLE
+//    - РЅР°РёР±РѕР»РµРµ Р±Р»РёР·РєРѕРµ РїРѕ РґР»РёРЅРµ РїСЂРѕРµРєС†РёРё Рє РѕС‚СЂРµР·РєСѓ С‚СЂР°СЃСЃС‹.
+//        РњРѕР¶РЅРѕ РѕС‚Р±СЂР°СЃС‹РІР°С‚СЊ РїСЂРѕРµРєС†РёРё, СѓРґР°Р»С‘РЅРЅС‹Рµ РѕС‚ РѕС‚СЂРµР·РєР° РґР°Р»СЊС€Рµ, С‡РµРј FILTER_COOF_LEN
 //
 vector<ProjectionDot> Projection::filterProjection(vector<ProjectionDot>* prForDot)
 {
@@ -114,19 +114,19 @@ vector<ProjectionDot> Projection::filterProjection(vector<ProjectionDot>* prForD
             return *prForDot;
         }
 
-        // Взять ближайший сегмент
+        // Р’Р·СЏС‚СЊ Р±Р»РёР¶Р°Р№С€РёР№ СЃРµРіРјРµРЅС‚
         std::sort(prForDot->begin(), prForDot->end(), numSegComp);
         unsigned int v = (*prForDot)[0].numSegment;
         vector<ProjectionDot>::iterator it = std::find_if(prForDot->begin(), prForDot->end(), [&](const ProjectionDot& s)->bool { return (s.numSegment > v + FILTER_COOF_SEG_NUM); });
         prForDot->erase(it, prForDot->end());
 
-        //2 Для всех подходящих направлений выбрать проекцию с подходящей длиной
+        //2 Р”Р»СЏ РІСЃРµС… РїРѕРґС…РѕРґСЏС‰РёС… РЅР°РїСЂР°РІР»РµРЅРёР№ РІС‹Р±СЂР°С‚СЊ РїСЂРѕРµРєС†РёСЋ СЃ РїРѕРґС…РѕРґСЏС‰РµР№ РґР»РёРЅРѕР№
          std::sort(prForDot->begin(), prForDot->end(), lenComp);
          double val = (*prForDot)[0].l;
          it = std::find_if(prForDot->begin(), prForDot->end(), [&](const ProjectionDot& s)->bool { return (s.l > val + FILTER_COOF_LEN); });
          prForDot->erase(it, prForDot->end());
          
-        //Отфильтровать проекции по направлению
+        //РћС‚С„РёР»СЊС‚СЂРѕРІР°С‚СЊ РїСЂРѕРµРєС†РёРё РїРѕ РЅР°РїСЂР°РІР»РµРЅРёСЋ
          std::sort(prForDot->begin(), prForDot->end(), dirComp);
          val = (*prForDot)[0].alpha;
          it = std::find_if(prForDot->begin(), prForDot->end(), [&](const ProjectionDot& s)->bool { return (s.alpha > val + FILTER_COOF_ANGLE); });
@@ -138,7 +138,7 @@ vector<ProjectionDot> Projection::filterProjection(vector<ProjectionDot>* prForD
     return *prForDot;
 };
 
-// Построить уравнение прямой AB
+// РџРѕСЃС‚СЂРѕРёС‚СЊ СѓСЂР°РІРЅРµРЅРёРµ РїСЂСЏРјРѕР№ AB
 Straight create_straight(CoordinatsDecartDot A, CoordinatsDecartDot B)
 {
     Straight s;
@@ -148,7 +148,7 @@ Straight create_straight(CoordinatsDecartDot A, CoordinatsDecartDot B)
     return s;
 };
 
-// Найти точку пересечения прямых a и b
+// РќР°Р№С‚Рё С‚РѕС‡РєСѓ РїРµСЂРµСЃРµС‡РµРЅРёСЏ РїСЂСЏРјС‹С… a Рё b
 vector<CoordinatsDecartDot> intersection(Straight a, Straight b) 
 {
     CoordinatsDecartDot ans;
@@ -162,18 +162,18 @@ vector<CoordinatsDecartDot> intersection(Straight a, Straight b)
     return res;
 };
 
-// Определение всех проекций измерений к каждому сегменту трассы
-// Для измерения создаётся вектор перемещения за время дельта Т
-// Дельта Т делится на несколько отрезков длиной, задаваемой параметром LEN_INTERVAL
-// Считаю, что вектор перемещения сонаправлен с вектором скорости, если считать, что движение прямолинейное
-// Для каждой точки вычисляется проекция на каждый сегмент трассы
+// РћРїСЂРµРґРµР»РµРЅРёРµ РІСЃРµС… РїСЂРѕРµРєС†РёР№ РёР·РјРµСЂРµРЅРёР№ Рє РєР°Р¶РґРѕРјСѓ СЃРµРіРјРµРЅС‚Сѓ С‚СЂР°СЃСЃС‹
+// Р”Р»СЏ РёР·РјРµСЂРµРЅРёСЏ СЃРѕР·РґР°С‘С‚СЃСЏ РІРµРєС‚РѕСЂ РїРµСЂРµРјРµС‰РµРЅРёСЏ Р·Р° РІСЂРµРјСЏ РґРµР»СЊС‚Р° Рў
+// Р”РµР»СЊС‚Р° Рў РґРµР»РёС‚СЃСЏ РЅР° РЅРµСЃРєРѕР»СЊРєРѕ РѕС‚СЂРµР·РєРѕРІ РґР»РёРЅРѕР№, Р·Р°РґР°РІР°РµРјРѕР№ РїР°СЂР°РјРµС‚СЂРѕРј LEN_INTERVAL
+// РЎС‡РёС‚Р°СЋ, С‡С‚Рѕ РІРµРєС‚РѕСЂ РїРµСЂРµРјРµС‰РµРЅРёСЏ СЃРѕРЅР°РїСЂР°РІР»РµРЅ СЃ РІРµРєС‚РѕСЂРѕРј СЃРєРѕСЂРѕСЃС‚Рё, РµСЃР»Рё СЃС‡РёС‚Р°С‚СЊ, С‡С‚Рѕ РґРІРёР¶РµРЅРёРµ РїСЂСЏРјРѕР»РёРЅРµР№РЅРѕРµ
+// Р”Р»СЏ РєР°Р¶РґРѕР№ С‚РѕС‡РєРё РІС‹С‡РёСЃР»СЏРµС‚СЃСЏ РїСЂРѕРµРєС†РёСЏ РЅР° РєР°Р¶РґС‹Р№ СЃРµРіРјРµРЅС‚ С‚СЂР°СЃСЃС‹
 vector<ProjectionDot> Projection::allProjectionForMeasurement(vector<ConfigTrace>*trace, unsigned int currentIndex, Measurements* m)
 {
     vector<ProjectionDot> res;
-    double deltaR = 0.0;        // длина вектора перемещения
+    double deltaR = 0.0;        // РґР»РёРЅР° РІРµРєС‚РѕСЂР° РїРµСЂРµРјРµС‰РµРЅРёСЏ
     double deltaX = 0.0;
     double deltaY = 0.0;
-    double lenProj;             // длина проекции
+    double lenProj;             // РґР»РёРЅР° РїСЂРѕРµРєС†РёРё
     
     unsigned long deltaT = m->t;
     CoordinatsDecartSection sec;
@@ -186,7 +186,7 @@ vector<ProjectionDot> Projection::allProjectionForMeasurement(vector<ConfigTrace
         double curX = m->x;
         double curY = m->y;
 
-        //Для каждого интервала
+        //Р”Р»СЏ РєР°Р¶РґРѕРіРѕ РёРЅС‚РµСЂРІР°Р»Р°
         for (unsigned int interval = 0; interval < (deltaT / LEN_INTERVAL)+1; interval++)
         {
             CoordinatsDecartDot currentXY = { curX, curY };
@@ -194,19 +194,19 @@ vector<ProjectionDot> Projection::allProjectionForMeasurement(vector<ConfigTrace
             Straight s = create_straight(sec.beg, sec.end);
             Straight sp = create_straight(currentXY, dot);
 
-            //Проверям, попадает ли сама точка на отрезок
+            //РџСЂРѕРІРµСЂСЏРј, РїРѕРїР°РґР°РµС‚ Р»Рё СЃР°РјР° С‚РѕС‡РєР° РЅР° РѕС‚СЂРµР·РѕРє
             if (thc(&sec.beg, &sec.end, &currentXY))
             {
                 res.push_back({ currentXY , 0, abs(angle(&sec.beg,&sec.end) - m->phi),i });
             }
             else {
-                //Находим точку пересечения отрезка трассы и перпендикуляра к нему
+                //РќР°С…РѕРґРёРј С‚РѕС‡РєСѓ РїРµСЂРµСЃРµС‡РµРЅРёСЏ РѕС‚СЂРµР·РєР° С‚СЂР°СЃСЃС‹ Рё РїРµСЂРїРµРЅРґРёРєСѓР»СЏСЂР° Рє РЅРµРјСѓ
                 vector<CoordinatsDecartDot> vProjDot = intersection(s, sp);
                 if (!vProjDot.empty())
                 {
                     lenProj = r(&(vProjDot[0]), &currentXY);
 
-                    //Проверяем, попадает ли точка пересечения на отрезок
+                    //РџСЂРѕРІРµСЂСЏРµРј, РїРѕРїР°РґР°РµС‚ Р»Рё С‚РѕС‡РєР° РїРµСЂРµСЃРµС‡РµРЅРёСЏ РЅР° РѕС‚СЂРµР·РѕРє
                     if (thc(&sec.beg, &sec.end, &vProjDot[0]))
                     {
                         res.push_back({ vProjDot[0] , lenProj, abs(angle(&sec.beg,&sec.end) - m->phi),i });
@@ -214,7 +214,7 @@ vector<ProjectionDot> Projection::allProjectionForMeasurement(vector<ConfigTrace
                 }
             }
             
-            //Определить длину перемещения  (v/t) и координаты конца
+            //РћРїСЂРµРґРµР»РёС‚СЊ РґР»РёРЅСѓ РїРµСЂРµРјРµС‰РµРЅРёСЏ  (v/t) Рё РєРѕРѕСЂРґРёРЅР°С‚С‹ РєРѕРЅС†Р°
             deltaR = m->v * (LEN_INTERVAL);
             deltaX = cos(m->phi * M_PI / 180) * deltaR;
             deltaY = sin(m->phi * M_PI / 180) * deltaR;
@@ -227,7 +227,7 @@ vector<ProjectionDot> Projection::allProjectionForMeasurement(vector<ConfigTrace
     return res;
 };
 
-//Получение проекций измерения
+//РџРѕР»СѓС‡РµРЅРёРµ РїСЂРѕРµРєС†РёР№ РёР·РјРµСЂРµРЅРёСЏ
 vector<ProjectionDot> Projection::getProjection()
 {
     CoordinatsDecartSection sec;
