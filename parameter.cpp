@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "parameter.h"
 #include <string>
 #include <fstream>
