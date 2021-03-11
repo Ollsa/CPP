@@ -44,30 +44,30 @@ CoordinatsDecartDot perpendicularDot(CoordinatsDecartDot *a, CoordinatsDecartDot
 }
 
 //Расстояние между двумя точками
-double r(CoordinatsDecartDot *a, CoordinatsDecartDot* b)
+double calculateDistanceBetweenDots(CoordinatsDecartDot *a, CoordinatsDecartDot* b)
 {
     return sqrt(pow((a->x - b->x), 2) + pow((a->y - b->y), 2));
 }
 
 //Определить, лежит ли точка C на отрезке AB
-bool thc(CoordinatsDecartDot* A, CoordinatsDecartDot* B, CoordinatsDecartDot* C)
+bool checkDotOnSegment(CoordinatsDecartDot* A, CoordinatsDecartDot* B, CoordinatsDecartDot* C)
 {
     CoordinatsDecartDot a = { B->x - A->x, B->y - A->y };
     CoordinatsDecartDot b = { C->x - A->x, C->y - A->y};
         double sa = a.x * b.y - b.x * a.y;
-        if (sa > 0.0)
+        if (sa > 0.0) // слева
             return false;
-        if (sa < 0.0)
+        if (sa < 0.0) //справа
             return false;
-        if ((a.x * b.x < 0.0) || (a.y * b.y < 0.0))
+        if ((a.x * b.x < 0.0) || (a.y * b.y < 0.0)) // на прямой вне отрезка(сзади)
             return false;
-        if (sqrt(a.x * a.x + a.y * a.y) < sqrt(b.x * b.x + b.y * b.y))
+        if (sqrt(a.x * a.x + a.y * a.y) < sqrt(b.x * b.x + b.y * b.y)) // на прямой вне отрезка (впереди)
             return false;
-        if ((isEqual(A->x, C->x, EPSILON))&&(isEqual(A->y, C->y, EPSILON)))
+        if ((isEqual(A->x, C->x, EPSILON))&&(isEqual(A->y, C->y, EPSILON))) // точка является началом отрезка
             return true;
-        if ((isEqual(B->x, C->x, EPSILON)) && (isEqual(B->y, C->y, EPSILON)))
+        if ((isEqual(B->x, C->x, EPSILON)) && (isEqual(B->y, C->y, EPSILON)))// точка является концом отрезка
             return true;
-        return true;      
+        return true; //точка лежит на отрезке
 }
 
 //Определение угла наклона отрезка относительно оси OX в градусах
@@ -195,7 +195,7 @@ vector<ProjectionDot> Projection::allProjectionForMeasurement(vector<ConfigTrace
             Straight sp = create_straight(currentXY, dot);
 
             //Проверям, попадает ли сама точка на отрезок
-            if (thc(&sec.beg, &sec.end, &currentXY))
+            if (checkDotOnSegment(&sec.beg, &sec.end, &currentXY))
             {
                 res.push_back({ currentXY , 0, abs(angle(&sec.beg,&sec.end) - m->phi),i });
             }
@@ -204,10 +204,10 @@ vector<ProjectionDot> Projection::allProjectionForMeasurement(vector<ConfigTrace
                 vector<CoordinatsDecartDot> vProjDot = intersection(s, sp);
                 if (!vProjDot.empty())
                 {
-                    lenProj = r(&(vProjDot[0]), &currentXY);
+                    lenProj = calculateDistanceBetweenDots(&(vProjDot[0]), &currentXY);
 
                     //Проверяем, попадает ли точка пересечения на отрезок
-                    if (thc(&sec.beg, &sec.end, &vProjDot[0]))
+                    if (checkDotOnSegment(&sec.beg, &sec.end, &vProjDot[0]))
                     {
                         res.push_back({ vProjDot[0] , lenProj, abs(angle(&sec.beg,&sec.end) - m->phi),i });
                     }
@@ -262,11 +262,9 @@ vector<ProjectionDot> Projection::getProjection()
                         {
 
                             for (unsigned int k = 0; k < bPr.size(); k++) {
-                                vBest.push_back(bPr[k]);
+                                vBest.push_back(bPr[0]);
                             }
                             cInd = bPr[bPr.size() - 1].numSegment;
-
-
                         }
                     }
                 }
